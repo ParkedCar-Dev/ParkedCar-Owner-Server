@@ -1,0 +1,22 @@
+POST http://localhost:5000/gettable
+Content-Type: application/json
+
+{
+    "table": "details",
+}
+
+
+###
+GET http://localhost:5000/gettable
+
+###
+
+
+###
+POST http://localhost:5000/updatestatus
+Content-Type: application/json
+
+{
+    "id": 7,
+    "status": "Completed"
+}
