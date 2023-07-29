@@ -1,6 +1,6 @@
 const db = require('../models');
-const space_owner = db.space_owner;
 const bcrypt = require('bcrypt');
+const userTable = db.space_owner;
 
 module.exports = class RegisterController{
     static async register(req, res){
@@ -9,13 +9,12 @@ module.exports = class RegisterController{
             if (!name || !email || !phone || !password){
                 return res.json({status: "error", message: "Invalid form submission."})
             }
-            const existingUser = await space_owner.findOne({where: {email: email}})
+            const existingUser = await userTable.findOne({where: {email: email}})
             if (existingUser){
                 return res.json({status: "error", message: "User already exists."})
             }
-            const salt = await bcrypt.genSalt(10);
-            const hash = await bcrypt.hash(password, salt);
-            await space_owner.create({name: name, email: email, phone: phone, password: hash})
+            const hash = await bcrypt.hash(password, 10);
+            await userTable.create({name: name, email: email, phone: phone, password: hash})
             res.json({status: "success", message: "User registered successfully."})
         }catch(err){
             console.error(err.message)

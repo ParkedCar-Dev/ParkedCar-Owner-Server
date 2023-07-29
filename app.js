@@ -1,11 +1,17 @@
 const express = require("express")
 const cors = require("cors");
 const db = require("./models");
+require("dotenv").config();
+const passport = require("passport");
+require("./config/passportconfig")(passport);
 const regRoute = require("./routes/register")
+const authRoute = require("./routes/auth")
+const protectedRoute = require("./routes/protected")
 
 const app = express();
 app.use(express.json())
 app.use(cors())
+app.use(passport.initialize())
 
 
 db.sequelize.sync()
@@ -16,17 +22,9 @@ db.sequelize.sync()
     console.log("Failed to sync db: " + err.message);
   });
 
-
-app.get("/", async (req, res) => {
-    try{
-        res.json({status: "success", message: "Welcome to the Demo Server."})
-    }catch(err){
-        console.error(err.message)
-        res.json({status: "error"})
-    }
-})
-
 app.use("/register", regRoute)
+app.use("/auth", authRoute)
+app.use("/protected", passport.authenticate("jwt", {session: false}), protectedRoute)
 
 const port = process.env.PORT || 5000;
 

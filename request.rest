@@ -11,3 +11,32 @@ Content-Type: application/json
     "phone": "1234567890",
     "password": "123456"
 }
+
+###
+POST http://localhost:8001/auth/login
+Content-Type: application/json
+
+{
+    "email": "user1@test.com",
+    "password": "123456"
+}
+
+###
+POST http://localhost:8001/auth/refresh
+Content-Type: application/json
+
+{
+    "refreshToken": "3d8466051a1b3e8d080c76b4c356b8dd2df17d243703c5205ae79d65c3e7892beb14f11f316c21437b2ebe7412e3f519892162e8d29105f9fd4778e1923b9331"
+}
+
+###
+POST http://localhost:8001/auth/logout
+Content-Type: application/json
+
+{
+    "refreshToken": "3d8466051a1b3e8d080c76b4c356b8dd2df17d243703c5205ae79d65c3e7892beb14f11f316c21437b2ebe7412e3f519892162e8d29105f9fd4778e1923b9331"
+}
+
+###
+GET http://localhost:8001/protected 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkwNjMzNTIzLCJleHAiOjE2OTA2MzcxMjN9.zKBwyYnkekFd_TadlrDY8ck0k1Nb6Ns2jUpDpeRY_Io

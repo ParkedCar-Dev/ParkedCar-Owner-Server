@@ -1,5 +1,5 @@
 // create table if not exists driver (
-//     driver_id integer not null primary key default nextval('user_id'),
+//     user_id integer not null primary key default nextval('user_id'),
 //     name varchar(255) not null,
 //     email varchar(255) not null,
 //     phone varchar(255) not null,
@@ -9,7 +9,7 @@
 
 module.exports = (sequelize, Sequelize) => {
     const DRIVER = sequelize.define("driver", {
-        driver_id: { type: Sequelize.INTEGER },
+        user_id: { type: Sequelize.INTEGER },
         name: { type: Sequelize.STRING, allowNull: false },
         email: { type: Sequelize.STRING, allowNull: false },
         phone: { type: Sequelize.STRING, allowNull: false },
