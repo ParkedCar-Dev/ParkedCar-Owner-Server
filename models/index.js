@@ -30,4 +30,5 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.space_owner = require("./space_owner.js")(sequelize, Sequelize); 
+db.space = require("./space.js")(sequelize, Sequelize);
 module.exports = db;
