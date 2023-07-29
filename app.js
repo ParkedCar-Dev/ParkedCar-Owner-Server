@@ -7,6 +7,7 @@ require("./config/passportconfig")(passport);
 const regRoute = require("./routes/register")
 const authRoute = require("./routes/auth")
 const protectedRoute = require("./routes/protected")
+const spaceRoute = require("./routes/space")
 
 const app = express();
 app.use(express.json())
@@ -25,6 +26,7 @@ db.sequelize.sync()
 app.use("/register", regRoute)
 app.use("/auth", authRoute)
 app.use("/protected", passport.authenticate("jwt", {session: false}), protectedRoute)
+app.use("/space", passport.authenticate("jwt", {session: false}), spaceRoute)
 
 const port = process.env.PORT || 5000;
 
