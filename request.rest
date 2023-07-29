@@ -1,22 +1,13 @@
-POST http://localhost:5000/gettable
+GET http://localhost:8001
+
+
+###
+POST http://localhost:8001/register
 Content-Type: application/json
 
 {
-    "table": "details",
-}
-
-
-###
-GET http://localhost:5000/gettable
-
-###
-
-
-###
-POST http://localhost:5000/updatestatus
-Content-Type: application/json
-
-{
-    "id": 7,
-    "status": "Completed"
+    "name": "user1",
+    "email": "user1@test.com",
+    "phone": "1234567890",
+    "password": "123456"
 }

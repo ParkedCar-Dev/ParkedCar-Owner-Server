@@ -7,12 +7,13 @@
 // );
 
 module.exports = (sequelize, Sequelize) => {
-    const SPACE_OWNER = sequelize.define("SPACE_OWNER", {
-        owner_id: { type: Sequelize.INTEGER, primaryKey: true },
+    const SPACE_OWNER = sequelize.define("space_owner", {
+        owner_id: { type: Sequelize.INTEGER },
         name: { type: Sequelize.STRING, allowNull: false },
         email: { type: Sequelize.STRING, allowNull: false },
         phone: { type: Sequelize.STRING, allowNull: false },
         password: { type: Sequelize.STRING, allowNull: false }
         });
+    SPACE_OWNER.removeAttribute('id');
     return SPACE_OWNER;
 };

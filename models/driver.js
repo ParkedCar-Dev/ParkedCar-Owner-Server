@@ -9,12 +9,13 @@
 
 module.exports = (sequelize, Sequelize) => {
     const DRIVER = sequelize.define("driver", {
-        driver_id: { type: Sequelize.INTEGER, primaryKey: true },
+        driver_id: { type: Sequelize.INTEGER },
         name: { type: Sequelize.STRING, allowNull: false },
         email: { type: Sequelize.STRING, allowNull: false },
         phone: { type: Sequelize.STRING, allowNull: false },
         password: { type: Sequelize.STRING, allowNull: false },
         rating: { type: Sequelize.DOUBLE, allowNull: true }
         });
+    DRIVER.removeAttribute('id');
     return DRIVER;
 }

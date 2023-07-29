@@ -1,11 +1,11 @@
 const express = require("express")
-const app = express();
 const cors = require("cors");
-
-app.use(cors())
-app.use(express.json())
-
 const db = require("./models");
+const regRoute = require("./routes/register")
+
+const app = express();
+app.use(express.json())
+app.use(cors())
 
 
 db.sequelize.sync()
@@ -25,6 +25,8 @@ app.get("/", async (req, res) => {
         res.json({status: "error"})
     }
 })
+
+app.use("/register", regRoute)
 
 const port = process.env.PORT || 5000;
 

@@ -28,16 +28,5 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.driver = require("./driver.js")(sequelize, Sequelize);
-
-db.driver.create({
-  name: "John Doe",
-  email: "syef",
-  password: "123456",
-  phone: "123456",
-}).then((driver) => {
-  console.log("Created driver: " + JSON.stringify(driver, null, 2));
-}).catch((err) => {
-  console.log("Failed to create driver: " + err.message);
-});
+db.space_owner = require("./space_owner.js")(sequelize, Sequelize); 
 module.exports = db;
