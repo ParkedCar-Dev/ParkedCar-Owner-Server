@@ -23,6 +23,9 @@ db.sequelize.sync()
     console.log("Failed to sync db: " + err.message);
   });
 
+app.use("/", (req, res) => {
+  res.send("Welcome to hell!");
+});
 app.use("/register", regRoute)
 app.use("/auth", authRoute)
 app.use("/protected", passport.authenticate("jwt", {session: false}), protectedRoute)
