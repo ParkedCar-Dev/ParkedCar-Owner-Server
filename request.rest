@@ -89,3 +89,21 @@ Content-Type: application/json
     "availability_mask": "availabilityMask",
     "time_slots": [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
 }
+
+###
+GET http://localhost:8001/space/getMySpaces
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkxMTY4NzUxLCJleHAiOjE2OTExNzIzNTF9.IJAH_JkrG7PexQ6f2tI7FG-ip0Fd-7Jf5Ia1rEIz8Bk
+
+###
+POST http://localhost:8001/space/changeSpaceStatus
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkxMTY4NzUxLCJleHAiOjE2OTExNzIzNTF9.IJAH_JkrG7PexQ6f2tI7FG-ip0Fd-7Jf5Ia1rEIz8Bk
+Content-Type: application/json
+
+{
+    "spaceId": 2,
+    "status": "disabled"
+}
+
+###
+GET http://localhost:8001/space/getDisabledSpaces
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkxMTY4NzUxLCJleHAiOjE2OTExNzIzNTF9.IJAH_JkrG7PexQ6f2tI7FG-ip0Fd-7Jf5Ia1rEIz8Bk

@@ -70,7 +70,9 @@ module.exports = class SpaceController {
 
     static async getSpace(req, res) {
         try {
-            const space = await db.space.findOne(where = { space_id: req.params.spaceId });
+            const space = await db.space.findOne({
+                where: { space_id: req.body.space_id },
+            });
             res.json({ status: "success", space: space });
         } catch (err) {
             console.error(err.message)
@@ -78,9 +80,11 @@ module.exports = class SpaceController {
         }
     }
 
-    static async getSpaceByUser(req, res) {
+    static async getMySpaces(req, res) {
         try {
-            const spaces = await db.space.findAll(where = { user_id: req.params.userId });
+            const spaces = await db.space.findAll({
+                where: { user_id: req.user.user_id },
+            });
             res.json({ status: "success", spaces: spaces });
         } catch (err) {
             console.error(err.message)
@@ -109,7 +113,9 @@ module.exports = class SpaceController {
                 time_slots,
             } = req.body;
 
-            const space = await db.space.findOne(where = { space_id: space_id });
+            const space = await db.space.findOne({
+                where: { space_id: space_id },
+            });
 
             if (space.user_id != req.user.user_id) {
                 return res.json({ status: "error", message: "You are not authorized to update this space." });
@@ -153,6 +159,84 @@ module.exports = class SpaceController {
                 time_slots: time_slots,
             }, where = { space_id: space_id });
             res.json({ status: "success", message: "Space updated successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
+        }
+    }
+
+    static async deleteSpace(req, res) {
+        try {
+            const space = await db.space.findOne({
+                where: { space_id: req.params.spaceId },
+            });
+
+            if (space.user_id != req.user.user_id) {
+                return res.json({ status: "error", message: "You are not authorized to delete this space." });
+            }
+
+            await db.space.destroy({
+                where: { space_id: req.params.spaceId },
+            });
+            res.json({ status: "success", message: "Space deleted successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
+        }
+    }
+
+    static async getActiveSpaces(req, res) {
+        try {
+            const spaces = await db.space.findAll({
+                where: { user_id: req.user.user_id, status: "active" },
+            });
+            res.json({ status: "success", spaces: spaces });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", spaces: null })
+        }
+    }
+
+    static async getDisabledSpaces(req, res) {
+        try {
+            const spaces = await db.space.findAll({
+                where: { user_id: req.user.user_id, status: "disabled" },
+            });
+            res.json({ status: "success", spaces: spaces });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", spaces: null })
+        }
+    }
+
+    static async getRequestedSpaces(req, res) {
+        try {
+            const spaces = await db.space.findAll({
+                where: { user_id: req.user.user_id, status: "requested" },
+            });
+            res.json({ status: "success", spaces: spaces });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", spaces: null })
+        }
+    }
+
+    static async changeSpaceStatus(req, res) {
+        try {
+            const space = await db.space.findOne({
+                where: { space_id: req.body.spaceId },
+            });
+
+            if (space.user_id != req.user.user_id) {
+                return res.json({ status: "error", message: "You are not authorized to change this space status." });
+            }
+
+            await db.space.update({
+                status: req.body.status
+            }, {
+                where: { space_id: req.body.spaceId },
+            });
+            res.json({ status: "success", message: "Space status changed successfully." });
         } catch (err) {
             console.error(err.message)
             res.json({ status: "error", message: "Something went wrong." })
