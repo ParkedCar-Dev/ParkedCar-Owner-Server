@@ -5,7 +5,7 @@ const router = express.Router();
 const spaceController = require("../controllers/space");
 
 router.post("/add", spaceController.addSpace);
-router.get("/getSpace/:space_id", spaceController.getSpace);
+router.get("/getSpace", spaceController.getSpace);
 router.get("/getMySpaces", spaceController.getMySpaces);
 router.post("/updateSpace", spaceController.updateSpace);
 router.post("/deleteSpace", spaceController.deleteSpace);

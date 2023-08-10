@@ -5,7 +5,10 @@ const userTable = db.space_owner;
 module.exports = class RegisterController{
     static async register(req, res){
         try{
-            const {name, email, phone, password} = req.body;
+
+            const [name, email, phone, password] = [req.body.name, req.body.email, req.body.phone, req.body.password]
+
+
             if (!name || !email || !phone || !password){
                 return res.json({status: "error", message: "Invalid form submission."})
             }

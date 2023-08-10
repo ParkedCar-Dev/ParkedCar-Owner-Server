@@ -9,7 +9,7 @@ const users = {}
 module.exports = class AuthController {
     static async login(req, res) {
         try {
-            const { email, password } = req.body;
+            const [email, password] = [req.body.email, req.body.password];
             if (!email || !password) {
                 return res.json({ status: "error", message: "Invalid form submission.", token: null, refreshToken: null });
             }
@@ -33,7 +33,7 @@ module.exports = class AuthController {
 
     static async refresh(req, res) {
         try {
-            const { refreshToken } = req.body;
+            const [refreshToken] = [req.body.refreshToken];
             if (!refreshToken) {
                 return res.json({ status: "error", message: "Invalid form submission.", token: null });
             }
@@ -55,7 +55,7 @@ module.exports = class AuthController {
 
     static async logout(req, res) {
         try {
-            const { refreshToken } = req.body;
+            const [refreshToken] = [req.body.refreshToken];
             if (!refreshToken) {
                 return res.json({ status: "error", message: "Invalid form submission." });
             }

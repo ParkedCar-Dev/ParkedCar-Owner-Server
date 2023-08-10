@@ -3,7 +3,7 @@ const db = require("../models");
 module.exports = class SpaceController {
     static async addSpace(req, res) {
         try {
-            const {
+            const [
                 width,
                 length,
                 height,
@@ -18,10 +18,25 @@ module.exports = class SpaceController {
                 latitude,
                 longitude,
                 availability_mask,
-                time_slots,
-            } = req.body;
+                time_slots
+            ] = [
+                req.body.width,
+                req.body.length,
+                req.body.height,
+                req.body.base_fare,
+                req.body.security_measures,
+                req.body.status,
+                req.body.rating,
+                req.body.total_books,
+                req.body.auto_approve,
+                req.body.address,
+                req.body.city,
+                req.body.latitude,
+                req.body.longitude,
+                req.body.availability_mask,
+                req.body.time_slots
+            ]
             const user_id = req.user.user_id;
-            console.log(req.body)
 
             if (
                 !width ||
@@ -94,8 +109,7 @@ module.exports = class SpaceController {
 
     static async updateSpace(req, res) {
         try {
-            const {
-                space_id,
+            const [
                 width,
                 length,
                 height,
@@ -110,8 +124,24 @@ module.exports = class SpaceController {
                 latitude,
                 longitude,
                 availability_mask,
-                time_slots,
-            } = req.body;
+                time_slots
+            ] = [
+                req.body.width,
+                req.body.length,
+                req.body.height,
+                req.body.base_fare,
+                req.body.security_measures,
+                req.body.status,
+                req.body.rating,
+                req.body.total_books,
+                req.body.auto_approve,
+                req.body.address,
+                req.body.city,
+                req.body.latitude,
+                req.body.longitude,
+                req.body.availability_mask,
+                req.body.time_slots
+            ]
 
             const space = await db.space.findOne({
                 where: { space_id: space_id },
@@ -168,7 +198,7 @@ module.exports = class SpaceController {
     static async deleteSpace(req, res) {
         try {
             const space = await db.space.findOne({
-                where: { space_id: req.params.spaceId },
+                where: { space_id: req.body.spaceId },
             });
 
             if (space.user_id != req.user.user_id) {
@@ -176,7 +206,7 @@ module.exports = class SpaceController {
             }
 
             await db.space.destroy({
-                where: { space_id: req.params.spaceId },
+                where: { space_id: req.body.spaceId },
             });
             res.json({ status: "success", message: "Space deleted successfully." });
         } catch (err) {
