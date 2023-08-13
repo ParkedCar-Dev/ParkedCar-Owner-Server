@@ -1,3 +1,4 @@
+const { user } = require("../config/dbconfig");
 const db = require("../models");
 
 module.exports = class SpaceController {
@@ -57,20 +58,20 @@ module.exports = class SpaceController {
             }
 
             if (
-                !width ||
-                !length ||
-                !height ||
-                !base_fare ||
-                !user_id ||
-                !security_measures ||
-                !status ||
-                !auto_approve ||
-                !address ||
-                !city ||
-                !latitude ||
-                !longitude ||
-                !availability_mask ||
-                !time_slots
+                width == null || width == undefined ||
+                length == null || length == undefined ||
+                height == null || height == undefined ||
+                base_fare == null || base_fare == undefined ||
+                security_measures == null || security_measures == undefined ||
+                status == null || status == undefined ||
+                auto_approve == null || auto_approve == undefined ||
+                address == null || address == undefined ||
+                city == null || city == undefined ||
+                latitude == null || latitude == undefined ||
+                longitude == null || longitude == undefined ||
+                availability_mask == null || availability_mask == undefined ||
+                time_slots == null || time_slots == undefined ||
+                user_id == null || user_id == undefined
             ) {
                 return res.json({ status: "error", message: "Invalid form submission." });
             }
@@ -162,20 +163,20 @@ module.exports = class SpaceController {
             }
 
             if (
-                !width ||
-                !length ||
-                !height ||
-                !base_fare ||
-                !security_measures ||
-                !status ||
-                !auto_approve ||
-                !address ||
-                !city ||
-                !latitude ||
-                !longitude ||
-                !availability_mask ||
-                !time_slots ||
-                !space_id
+                width == null || width == undefined ||
+                length == null || length == undefined ||
+                height == null || height == undefined ||
+                base_fare == null || base_fare == undefined ||
+                security_measures == null || security_measures == undefined ||
+                status == null || status == undefined ||
+                auto_approve == null || auto_approve == undefined ||
+                address == null || address == undefined ||
+                city == null || city == undefined ||
+                latitude == null || latitude == undefined ||
+                longitude == null || longitude == undefined ||
+                availability_mask == null || availability_mask == undefined ||
+                time_slots == null || time_slots == undefined ||
+                space_id == null || space_id == undefined
             ) {
                 return res.json({ status: "error", message: "Invalid form submission." });
             }
