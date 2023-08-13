@@ -2,7 +2,10 @@ const db = require("../models");
 
 module.exports = class SpaceController {
     static async addSpace(req, res) {
-        if(process.env.DEBUG == "True") console.log(req.body)
+        if(process.env.DEBUG == "True"){
+            console.log("req")
+            console.log(req.body)
+        }
         try {
             const [
                 width,
@@ -34,6 +37,24 @@ module.exports = class SpaceController {
                 req.body.time_slots
             ]
             const user_id = req.user.user_id;
+
+            if(process.env.DEBUG == "True") {
+                console.log("params:")
+                console.log("width: " + width)
+                console.log("length: " + length)
+                console.log("height: " + height)
+                console.log("base_fare: " + base_fare)  
+                console.log("user_id: " + user_id)
+                console.log("security_measures: " + security_measures)
+                console.log("status: " + status)
+                console.log("auto_approve: " + auto_approve)
+                console.log("address: " + address)
+                console.log("city: " + city)
+                console.log("latitude: " + latitude)
+                console.log("longitude: " + longitude)
+                console.log("availability_mask: " + availability_mask)
+                console.log("time_slots: " + time_slots)
+            }
 
             if (
                 !width ||

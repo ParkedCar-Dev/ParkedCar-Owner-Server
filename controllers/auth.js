@@ -21,7 +21,7 @@ module.exports = class AuthController {
             if (!match) {
                 return res.json({ status: "error", message: "Invalid email or password.", token: null, refreshToken: null });
             }
-            const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: "5h" });
             const refreshToken = crypto.randomBytes(64).toString("hex");
             users[refreshToken] = user.user_id;
             return res.json({ status: "success", message: "User logged in successfully.", token: token, refreshToken: refreshToken });
