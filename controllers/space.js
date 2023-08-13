@@ -10,8 +10,6 @@ module.exports = class SpaceController {
                 base_fare,
                 security_measures,
                 status,
-                rating,
-                total_books,
                 auto_approve,
                 address,
                 city,
@@ -26,8 +24,6 @@ module.exports = class SpaceController {
                 req.body.base_fare,
                 req.body.security_measures,
                 req.body.status,
-                req.body.rating,
-                req.body.total_books,
                 req.body.auto_approve,
                 req.body.address,
                 req.body.city,
@@ -46,8 +42,6 @@ module.exports = class SpaceController {
                 !user_id ||
                 !security_measures ||
                 !status ||
-                !rating ||
-                !total_books ||
                 !auto_approve ||
                 !address ||
                 !city ||
@@ -66,8 +60,6 @@ module.exports = class SpaceController {
                 user_id: user_id,
                 security_measures: security_measures,
                 status: status,
-                rating: rating,
-                total_books: total_books,
                 auto_approve: auto_approve,
                 address: address,
                 city: city,
@@ -116,8 +108,6 @@ module.exports = class SpaceController {
                 base_fare,
                 security_measures,
                 status,
-                rating,
-                total_books,
                 auto_approve,
                 address,
                 city,
@@ -132,8 +122,6 @@ module.exports = class SpaceController {
                 req.body.base_fare,
                 req.body.security_measures,
                 req.body.status,
-                req.body.rating,
-                req.body.total_books,
                 req.body.auto_approve,
                 req.body.address,
                 req.body.city,
@@ -158,8 +146,6 @@ module.exports = class SpaceController {
                 !base_fare ||
                 !security_measures ||
                 !status ||
-                !rating ||
-                !total_books ||
                 !auto_approve ||
                 !address ||
                 !city ||
