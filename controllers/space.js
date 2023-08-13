@@ -2,6 +2,7 @@ const db = require("../models");
 
 module.exports = class SpaceController {
     static async addSpace(req, res) {
+        if(process.env.DEBUG == "True") console.log(req.body)
         try {
             const [
                 width,
