@@ -20,8 +20,6 @@ module.exports = class SpaceController {
                 city,
                 latitude,
                 longitude,
-                availability_mask,
-                time_slots
             ] = [
                 req.body.width,
                 req.body.length,
@@ -34,11 +32,10 @@ module.exports = class SpaceController {
                 req.body.city,
                 req.body.latitude,
                 req.body.longitude,
-                req.body.availability_mask,
-                req.body.time_slots
             ]
             const user_id = req.user.user_id;
-
+            const availability_mask = "mask"
+            const time_slots = new Array(24 * 7).fill(true)
             if(process.env.DEBUG == "True") {
                 console.log("params:")
                 console.log("width: " + width)
@@ -53,8 +50,6 @@ module.exports = class SpaceController {
                 console.log("city: " + city)
                 console.log("latitude: " + latitude)
                 console.log("longitude: " + longitude)
-                console.log("availability_mask: " + availability_mask)
-                console.log("time_slots: " + time_slots)
             }
 
             if (
@@ -69,8 +64,6 @@ module.exports = class SpaceController {
                 city == null || city == undefined ||
                 latitude == null || latitude == undefined ||
                 longitude == null || longitude == undefined ||
-                availability_mask == null || availability_mask == undefined ||
-                time_slots == null || time_slots == undefined ||
                 user_id == null || user_id == undefined
             ) {
                 return res.json({ status: "error", message: "Invalid form submission." });

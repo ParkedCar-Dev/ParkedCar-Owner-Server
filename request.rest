@@ -1,4 +1,5 @@
 @baseURL = http://localhost:8001
+#@baseURL = https://parked-car-owner-dev-api.onrender.com
 
 ###
 GET {{baseURL}}
@@ -92,9 +93,7 @@ Content-Type: application/json
     "address": "address",
     "city": "city",
     "latitude": 10,
-    "longitude": 10,
-    "availability_mask": "availabilityMask",
-    "time_slots": [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+    "longitude": 10
 }
 
 ###
