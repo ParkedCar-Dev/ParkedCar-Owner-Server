@@ -3,7 +3,7 @@ const User = require('../models/space_owner.js');
 module.exports = class RegisterController{
     static async register(req, res){
         try{
-            const user = User.buildUser(req);
+            const user = await User.buildUser(req);
             if(!user) return res.json({status: "error", message: "Invalid form submission."});
             const existingUser = await User.findOne({where: {email: user.email}})
             if (existingUser){

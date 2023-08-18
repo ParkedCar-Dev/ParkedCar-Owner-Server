@@ -20,8 +20,8 @@ module.exports = class SpaceOwner extends Model {
         try{
             const [name, email, phone, password] = [req.body.name, req.body.email, req.body.phone, req.body.password];
             if(!name || !email || !phone || !password) return null;
-            password = await bcrypt.hash(password, 10);
-            return this.build({name: name, email: email, phone: phone, password: password});
+            const hash = await bcrypt.hash(password, 10);
+            return this.build({name: name, email: email, phone: phone, password: hash});
         }catch(err){
             throw err;
         }
