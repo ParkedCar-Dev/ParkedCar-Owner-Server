@@ -1,103 +1,142 @@
-const { where } = require("sequelize");
-const db = require("../models");
+const Space = require("../models/space");
 
 module.exports = class SpaceController {
     static async addSpace(req, res) {
-        try {
-            const {
-                width,
-                length,
-                height,
-                base_fare,
-                security_measures,
-                status,
-                rating,
-                total_books,
-                auto_approve,
-                address,
-                city,
-                latitude,
-                longitude,
-                availability_mask,
-                time_slots,
-            } = req.body;
-            const user_id = req.user.user_id;
+        if(process.env.DEBUG == "True"){
+            console.log("req")
             console.log(req.body)
-
-            if (
-                !width ||
-                !length ||
-                !height ||
-                !base_fare ||
-                !user_id ||
-                !security_measures ||
-                !status ||
-                !rating ||
-                !total_books ||
-                !auto_approve ||
-                !address ||
-                !city ||
-                !latitude ||
-                !longitude ||
-                !availability_mask ||
-                !time_slots
-            ) {
-                return res.json({
-                    status: "error",
-                    message: "Invalid form submission.",
-                });
+        }
+        try {
+            const space = Space.buildSpace(req);
+            if (space == null) {
+                return res.json({ status: "error", message: "Invalid form submission." });
             }
-            await db.space.create({
-                width: width,
-                length: length,
-                height: height,
-                base_fare: base_fare,
-                user_id: user_id,
-                security_measures: security_measures,
-                status: status,
-                rating: rating,
-                total_books: total_books,
-                auto_approve: auto_approve,
-                address: address,
-                city: city,
-                latitude: latitude,
-                longitude: longitude,
-                availability_mask: availability_mask,
-                time_slots: time_slots,
-            });
-            res.json({
-                status: "success",
-                message: "Space added successfully.",
-            });
+            await space.save();
+            res.json({ status: "success", message: "Space added successfully." });
         } catch (err) {
             console.error(err.message)
-            res.json({ status: "error" })
+            res.json({ status: "error", message: "Something went wrong." })
         }
     }
 
     static async getSpace(req, res) {
         try {
-            const space = await db.space.findOne(where = { space_id: req.params.spaceId });
-            res.json({
-                status: "success",
-                space: space,
+            const space = await Space.findOne({
+                where: { space_id: req.body.space_id },
             });
+            res.json({ status: "success", space: space });
         } catch (err) {
             console.error(err.message)
-            res.json({ status: "error" })
+            res.json({ status: "error", space: null })
         }
     }
 
-    static async getSpaceByUser(req, res) {
+    static async getMySpaces(req, res) {
         try {
-            const space = await db.space.findAll(where = { user_id: req.params.userId });
-            res.json({
-                status: "success",
-                space: space,
+            const spaces = await Space.findAll({
+                where: { user_id: req.user.user_id },
             });
+            res.json({ status: "success", spaces: spaces });
         } catch (err) {
             console.error(err.message)
-            res.json({ status: "error" })
+            res.json({ status: "error", spaces: null})
+        }
+    }
+
+    static async updateSpace(req, res) {
+        try {
+            const space_id = req.body.space_id;
+            const space = await Space.findOne({
+                where: { space_id: space_id },
+            });
+            if(space.user_id != req.user.user_id){
+                return res.json({ status: "error", message: "You are not authorized to update this space." });
+            }
+            if(space.setSpaceValues(req) == false){
+                return res.json({ status: "error", message: "Invalid form submission." });
+            }
+            await space.save();
+            res.json({ status: "success", message: "Space updated successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
+        }
+    }
+
+    static async deleteSpace(req, res) {
+        try {
+            const space = await Space.findOne({
+                where: { space_id: req.body.spaceId },
+            });
+            if (space.user_id != req.user.user_id) {
+                return res.json({ status: "error", message: "You are not authorized to delete this space." });
+            }
+            await Space.destroy({
+                where: { space_id: req.body.spaceId },
+            });
+            res.json({ status: "success", message: "Space deleted successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
+        }
+    }
+
+    static async getActiveSpaces(req, res) {
+        try {
+            const spaces = await Space.findAll({
+                where: { user_id: req.user.user_id, status: "active" },
+            });
+            res.json({ status: "success", spaces: spaces });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", spaces: null })
+        }
+    }
+
+    static async getDisabledSpaces(req, res) {
+        try {
+            const spaces = await Space.findAll({
+                where: { user_id: req.user.user_id, status: "disabled" },
+            });
+            res.json({ status: "success", spaces: spaces });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", spaces: null })
+        }
+    }
+
+    static async getRequestedSpaces(req, res) {
+        try {
+            const spaces = await Space.findAll({
+                where: { user_id: req.user.user_id, status: "requested" },
+            });
+            res.json({ status: "success", spaces: spaces });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", spaces: null })
+        }
+    }
+
+    static async changeSpaceStatus(req, res) {
+        try {
+            const space = await Space.findOne({
+                where: { space_id: req.body.spaceId },
+            });
+            if(space == null){
+                return res.json({ status: "error", message: "Invalid space id." });
+            }
+            if (space.user_id != req.user.user_id) {
+                return res.json({ status: "error", message: "You are not authorized to change this space status." });
+            }
+            await Space.update({
+                status: req.body.status
+            }, {
+                where: { space_id: req.body.spaceId },
+            });
+            res.json({ status: "success", message: "Space status changed successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
         }
     }
 }

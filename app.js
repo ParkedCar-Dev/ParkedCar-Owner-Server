@@ -27,6 +27,9 @@ app.use("/register", regRoute)
 app.use("/auth", authRoute)
 app.use("/protected", passport.authenticate("jwt", {session: false}), protectedRoute)
 app.use("/space", passport.authenticate("jwt", {session: false}), spaceRoute)
+app.use("/", (req, res) => {
+  res.send("Welcome to hell!");
+});
 
 const port = process.env.PORT || 5000;
 

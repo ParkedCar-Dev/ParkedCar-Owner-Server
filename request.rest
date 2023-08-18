@@ -1,19 +1,24 @@
-GET http://localhost:8001
+@baseURL = http://localhost:8001
+#@baseURL = https://parked-car-owner-dev-api.onrender.com
+
+###
+GET {{baseURL}}
 
 
 ###
-POST http://localhost:8001/register
+POST {{baseURL}}/register
 Content-Type: application/json
 
 {
-    "name": "user1",
-    "email": "user1@test.com",
+    "name": "owner1",
+    "email": "owner1",
     "phone": "1234567890",
-    "password": "123456"
+    "password": "1234"
 }
 
 ###
-POST http://localhost:8001/auth/login
+# @name login
+POST {{baseURL}}/auth/login
 Content-Type: application/json
 
 {
@@ -22,70 +27,90 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8001/auth/refresh
+
+@access_token = {{login.response.body.token}}
+@refresh_token = {{login.response.body.refreshToken}} 
+
+###
+POST {{baseURL}}/auth/refresh
 Content-Type: application/json
 
 {
-    "refreshToken": "3d8466051a1b3e8d080c76b4c356b8dd2df17d243703c5205ae79d65c3e7892beb14f11f316c21437b2ebe7412e3f519892162e8d29105f9fd4778e1923b9331"
+    "refreshToken": "{{refresh_token}}"
 }
 
 ###
-POST http://localhost:8001/auth/logout
+POST {{baseURL}}/auth/logout
 Content-Type: application/json
 
 {
-    "refreshToken": "3d8466051a1b3e8d080c76b4c356b8dd2df17d243703c5205ae79d65c3e7892beb14f11f316c21437b2ebe7412e3f519892162e8d29105f9fd4778e1923b9331"
+    "refreshToken": "{{refresh_token}}"
 }
 
 ###
-GET http://localhost:8001/protected 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkwNjMzNTIzLCJleHAiOjE2OTA2MzcxMjN9.zKBwyYnkekFd_TadlrDY8ck0k1Nb6Ns2jUpDpeRY_Io
-
-
-
-// const SPACE = sequelize.define("space", {
-//     space_id: { type: Sequelize.INTEGER },
-//     width: { type: Sequelize.DOUBLE, allowNull: false },
-//     length: { type: Sequelize.DOUBLE, allowNull: false },
-//     height: { type: Sequelize.DOUBLE, allowNull: false },
-//     base_fare: { type: Sequelize.DOUBLE, allowNull: false },
-//     user_id: { type: Sequelize.INTEGER, allowNull: false },
-//     security_measures: { type: Sequelize.STRING, allowNull: false },
-//     status: { type: Sequelize.STRING, allowNull: false },
-//     rating: { type: Sequelize.DOUBLE, allowNull: true },
-//     total_books: { type: Sequelize.INTEGER, allowNull: false },
-//     auto_approve: { type: Sequelize.BOOLEAN, allowNull: false },
-//     address: { type: Sequelize.STRING, allowNull: false },
-//     city: { type: Sequelize.STRING, allowNull: false },
-//     latitude: { type: Sequelize.DOUBLE, allowNull: false },
-//     longitude: { type: Sequelize.DOUBLE, allowNull: false },
-//     created_at: { type: Sequelize.DATE, allowNull: false },
-//     updated_at: { type: Sequelize.DATE, allowNull: false },
-//     availability_mask: { type: Sequelize.STRING, allowNull: false },
-//     time_slots: { type: Sequelize.ARRAY(Sequelize.BOOLEAN), allowNull: false }
-//     });
-
-
+GET {{baseURL}}/protected 
+Authorization: Bearer {{access_token}}
 
 ###
-POST http://localhost:8001/space/add
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkwNjU2MjY5LCJleHAiOjE2OTA2NTk4Njl9.GUEgUg7f9AsoO6eRvLSPukDcfrSaM3oZIYB1f1DxrZo
+POST {{baseURL}}/space/add
+Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
     "width": 10,
     "length": 10,
     "height": 10,
-    "base_fare": 100,
+    "base_fare": 1000,
     "security_measures": "securityMeasures",
     "status": "status",
-    "rating": 4,
-    "total_books": 10,
+    "auto_approve": true,
+    "address": "address",
+    "city": "city",
+    "latitude": 10,
+    "longitude": 10
+}
+
+###
+POST {{baseURL}}/space/update
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "width": 10,
+    "length": 10,
+    "height": 10,
+    "base_fare": 100000,
+    "security_measures": "securityMeasures",
+    "status": "status",
     "auto_approve": true,
     "address": "address",
     "city": "city",
     "latitude": 10,
     "longitude": 10,
-    "availability_mask": "availabilityMask",
-    "time_slots": [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+    "space_id": 36
 }
+
+###
+GET {{baseURL}}/space/getMySpaces
+Authorization: Bearer {{access_token}}
+###
+POST {{baseURL}}/space/changeSpaceStatus
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "spaceId": 36,
+    "status": "disabled"
+}
+
+###
+GET {{baseURL}}/space/getDisabledSpaces
+Authorization: Bearer {{access_token}}
+
+###
+GET {{baseURL}}/space/getActiveSpaces
+Authorization: Bearer {{access_token}}
+
+###
+GET {{baseURL}}/space/getRequestedSpaces
+Authorization: Bearer {{access_token}}

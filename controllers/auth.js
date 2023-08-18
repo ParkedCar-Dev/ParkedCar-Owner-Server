@@ -1,61 +1,58 @@
-const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const userTable = db.space_owner;
+const User = require("../models/space_owner.js");
 
 const users = {}
 
 module.exports = class AuthController {
     static async login(req, res) {
         try {
-            const { email, password } = req.body;
-            if (!email || !password) {
-                return res.json({ status: "error", message: "Invalid form submission." });
-            }
-            const user = await userTable.findOne({ where: { email: email } });
+            const [email, password] = [req.body.email, req.body.password];
+            if (!email || !password) return res.json({ status: "error", message: "Invalid form submission.", token: null, refreshToken: null });
+            const user = await User.findOne({ where: { email: email } });
             if (!user) {
-                return res.json({ status: "error", message: "Invalid email or password." });
+                return res.json({ status: "error", message: "Invalid email or password.", token: null, refreshToken: null });
             }
             const match = await bcrypt.compare(password, user.password);
             if (!match) {
-                return res.json({ status: "error", message: "Invalid email or password." });
+                return res.json({ status: "error", message: "Invalid email or password.", token: null, refreshToken: null });
             }
-            const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: "5h" });
             const refreshToken = crypto.randomBytes(64).toString("hex");
             users[refreshToken] = user.user_id;
             return res.json({ status: "success", message: "User logged in successfully.", token: token, refreshToken: refreshToken });
         } catch (err) {
             console.error(err.message);
-            return res.json({ status: "error" });
+            return res.json({ status: "error", message: "Something went wrong.", token: null, refreshToken: null });
         }
     }
 
     static async refresh(req, res) {
         try {
-            const { refreshToken } = req.body;
+            const [refreshToken] = [req.body.refreshToken];
             if (!refreshToken) {
-                return res.json({ status: "error", message: "Invalid form submission." });
+                return res.json({ status: "error", message: "Invalid form submission.", token: null });
             }
             const userId = users[refreshToken];
             if (!userId) {
-                return res.json({ status: "error", message: "Invalid refresh token." });
+                return res.json({ status: "error", message: "Invalid refresh token.", token: null });
             }
-            const user = await userTable.findOne({ where: { user_id: userId } });
+            const user = await User.findOne({ where: { user_id: userId } });
             if (!user) {
-                return res.json({ status: "error", message: "Invalid refresh token." });
+                return res.json({ status: "error", message: "Invalid refresh token.", token: null });
             }
             const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: "1h" });
             return res.json({ status: "success", message: "Token refreshed successfully.", token: token });
         } catch (err) {
             console.error(err.message);
-            return res.json({ status: "error" });
+            return res.json({ status: "error", message: "Something went wrong.", token: null });
         }
     }
 
     static async logout(req, res) {
         try {
-            const { refreshToken } = req.body;
+            const [refreshToken] = [req.body.refreshToken];
             if (!refreshToken) {
                 return res.json({ status: "error", message: "Invalid form submission." });
             }
@@ -67,7 +64,7 @@ module.exports = class AuthController {
             return res.json({ status: "success", message: "User logged out successfully." });
         } catch (err) {
             console.error(err.message);
-            return res.json({ status: "error" });
+            return res.json({ status: "error", message: "Something went wrong." });
         }
     }
 }
