@@ -1,5 +1,5 @@
-const { user } = require("../config/dbconfig");
 const db = require("../models");
+const Utils = require("../utils/utils");
 
 module.exports = class SpaceController {
     static async addSpace(req, res) {
@@ -9,80 +9,25 @@ module.exports = class SpaceController {
         }
         try {
             const [
-                width,
-                length,
-                height,
-                base_fare,
-                security_measures,
-                status,
-                auto_approve,
-                address,
-                city,
-                latitude,
-                longitude,
+                width, length, height, base_fare,
+                security_measures, status, auto_approve, 
+                address,  city, latitude, longitude,
             ] = [
-                req.body.width,
-                req.body.length,
-                req.body.height,
-                req.body.base_fare,
-                req.body.security_measures,
-                req.body.status,
-                req.body.auto_approve,
-                req.body.address,
-                req.body.city,
-                req.body.latitude,
-                req.body.longitude,
+                req.body.width, req.body.length, req.body.height, req.body.base_fare,
+                req.body.security_measures, req.body.status, req.body.auto_approve,
+                req.body.address, req.body.city, req.body.latitude, req.body.longitude,
             ]
             const user_id = req.user.user_id;
             const availability_mask = "mask"
             const time_slots = new Array(24 * 7).fill(true)
-            if(process.env.DEBUG == "True") {
-                console.log("params:")
-                console.log("width: " + width)
-                console.log("length: " + length)
-                console.log("height: " + height)
-                console.log("base_fare: " + base_fare)  
-                console.log("user_id: " + user_id)
-                console.log("security_measures: " + security_measures)
-                console.log("status: " + status)
-                console.log("auto_approve: " + auto_approve)
-                console.log("address: " + address)
-                console.log("city: " + city)
-                console.log("latitude: " + latitude)
-                console.log("longitude: " + longitude)
-            }
 
-            if (
-                width == null || width == undefined ||
-                length == null || length == undefined ||
-                height == null || height == undefined ||
-                base_fare == null || base_fare == undefined ||
-                security_measures == null || security_measures == undefined ||
-                status == null || status == undefined ||
-                auto_approve == null || auto_approve == undefined ||
-                address == null || address == undefined ||
-                city == null || city == undefined ||
-                latitude == null || latitude == undefined ||
-                longitude == null || longitude == undefined ||
-                user_id == null || user_id == undefined
-            ) {
+            if ( Utils.checkNullOrUndefined([width, length, height, base_fare, security_measures, status, auto_approve, address, city, latitude, longitude, user_id])){
                 return res.json({ status: "error", message: "Invalid form submission." });
             }
-            await db.space.create({
-                width: width,
-                length: length,
-                height: height,
-                base_fare: base_fare,
-                user_id: user_id,
-                security_measures: security_measures,
-                status: status,
-                auto_approve: auto_approve,
-                address: address,
-                city: city,
-                latitude: latitude,
-                longitude: longitude,
-                availability_mask: availability_mask,
-                time_slots: time_slots,
+            await db.space.create({ 
+                width: width, length: length, height: height, base_fare: base_fare, user_id: user_id,
+                security_measures: security_measures, status: status, auto_approve: auto_approve, address: address,
+                city: city, latitude: latitude, longitude: longitude, availability_mask: availability_mask, time_slots: time_slots,
             });
             res.json({ status: "success", message: "Space added successfully." });
         } catch (err) {
@@ -118,33 +63,13 @@ module.exports = class SpaceController {
     static async updateSpace(req, res) {
         try {
             const [
-                width,
-                length,
-                height,
-                base_fare,
-                security_measures,
-                status,
-                auto_approve,
-                address,
-                city,
-                latitude,
-                longitude,
-                availability_mask,
-                time_slots
+                width, length, height, base_fare,
+                security_measures, status, auto_approve, address, city,
+                latitude, longitude, availability_mask, time_slots, space_id
             ] = [
-                req.body.width,
-                req.body.length,
-                req.body.height,
-                req.body.base_fare,
-                req.body.security_measures,
-                req.body.status,
-                req.body.auto_approve,
-                req.body.address,
-                req.body.city,
-                req.body.latitude,
-                req.body.longitude,
-                req.body.availability_mask,
-                req.body.time_slots
+                req.body.width, req.body.length, req.body.height, req.body.base_fare,
+                req.body.security_measures, req.body.status, req.body.auto_approve, req.body.address, req.body.city,
+                req.body.latitude, req.body.longitude, req.body.availability_mask, req.body.time_slots, req.body.space_id
             ]
 
             const space = await db.space.findOne({
@@ -155,40 +80,13 @@ module.exports = class SpaceController {
                 return res.json({ status: "error", message: "You are not authorized to update this space." });
             }
 
-            if (
-                width == null || width == undefined ||
-                length == null || length == undefined ||
-                height == null || height == undefined ||
-                base_fare == null || base_fare == undefined ||
-                security_measures == null || security_measures == undefined ||
-                status == null || status == undefined ||
-                auto_approve == null || auto_approve == undefined ||
-                address == null || address == undefined ||
-                city == null || city == undefined ||
-                latitude == null || latitude == undefined ||
-                longitude == null || longitude == undefined ||
-                availability_mask == null || availability_mask == undefined ||
-                time_slots == null || time_slots == undefined ||
-                space_id == null || space_id == undefined
-            ) {
+            if ( Utils.checkNullOrUndefined([width, length, height, base_fare, security_measures, status, auto_approve, address, city, latitude, longitude, availability_mask, time_slots, space_id])){
                 return res.json({ status: "error", message: "Invalid form submission." });
             }
             await db.space.update({
-                width: width,
-                length: length,
-                height: height,
-                base_fare: base_fare,
-                security_measures: security_measures,
-                status: status,
-                rating: rating,
-                total_books: total_books,
-                auto_approve: auto_approve,
-                address: address,
-                city: city,
-                latitude: latitude,
-                longitude: longitude,
-                availability_mask: availability_mask,
-                time_slots: time_slots,
+                width: width, length: length, height: height, base_fare: base_fare, security_measures: security_measures,
+                status: status, rating: rating, total_books: total_books, auto_approve: auto_approve, address: address,
+                city: city, latitude: latitude, longitude: longitude, availability_mask: availability_mask, time_slots: time_slots,
             }, where = { space_id: space_id });
             res.json({ status: "success", message: "Space updated successfully." });
         } catch (err) {
