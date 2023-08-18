@@ -10,8 +10,8 @@ POST {{baseURL}}/register
 Content-Type: application/json
 
 {
-    "name": "owner2",
-    "email": "owner2",
+    "name": "owner1",
+    "email": "owner1",
     "phone": "1234567890",
     "password": "1234"
 }
@@ -51,32 +51,6 @@ Content-Type: application/json
 GET {{baseURL}}/protected 
 Authorization: Bearer {{access_token}}
 
-
-
-// const SPACE = sequelize.define("space", {
-//     space_id: { type: Sequelize.INTEGER },
-//     width: { type: Sequelize.DOUBLE, allowNull: false },
-//     length: { type: Sequelize.DOUBLE, allowNull: false },
-//     height: { type: Sequelize.DOUBLE, allowNull: false },
-//     base_fare: { type: Sequelize.DOUBLE, allowNull: false },
-//     user_id: { type: Sequelize.INTEGER, allowNull: false },
-//     security_measures: { type: Sequelize.STRING, allowNull: false },
-//     status: { type: Sequelize.STRING, allowNull: false },
-//     rating: { type: Sequelize.DOUBLE, allowNull: true },
-//     total_books: { type: Sequelize.INTEGER, allowNull: false },
-//     auto_approve: { type: Sequelize.BOOLEAN, allowNull: false },
-//     address: { type: Sequelize.STRING, allowNull: false },
-//     city: { type: Sequelize.STRING, allowNull: false },
-//     latitude: { type: Sequelize.DOUBLE, allowNull: false },
-//     longitude: { type: Sequelize.DOUBLE, allowNull: false },
-//     created_at: { type: Sequelize.DATE, allowNull: false },
-//     updated_at: { type: Sequelize.DATE, allowNull: false },
-//     availability_mask: { type: Sequelize.STRING, allowNull: false },
-//     time_slots: { type: Sequelize.ARRAY(Sequelize.BOOLEAN), allowNull: false }
-//     });
-
-
-
 ###
 POST {{baseURL}}/space/add
 Authorization: Bearer {{access_token}}
@@ -86,7 +60,7 @@ Content-Type: application/json
     "width": 10,
     "length": 10,
     "height": 10,
-    "base_fare": 100,
+    "base_fare": 1000,
     "security_measures": "securityMeasures",
     "status": "status",
     "auto_approve": true,
@@ -94,6 +68,26 @@ Content-Type: application/json
     "city": "city",
     "latitude": 10,
     "longitude": 10
+}
+
+###
+POST {{baseURL}}/space/update
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "width": 10,
+    "length": 10,
+    "height": 10,
+    "base_fare": 100000,
+    "security_measures": "securityMeasures",
+    "status": "status",
+    "auto_approve": true,
+    "address": "address",
+    "city": "city",
+    "latitude": 10,
+    "longitude": 10,
+    "space_id": 36
 }
 
 ###
@@ -105,10 +99,18 @@ Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-    "spaceId": 2,
+    "spaceId": 36,
     "status": "disabled"
 }
 
 ###
 GET {{baseURL}}/space/getDisabledSpaces
+Authorization: Bearer {{access_token}}
+
+###
+GET {{baseURL}}/space/getActiveSpaces
+Authorization: Bearer {{access_token}}
+
+###
+GET {{baseURL}}/space/getRequestedSpaces
 Authorization: Bearer {{access_token}}
