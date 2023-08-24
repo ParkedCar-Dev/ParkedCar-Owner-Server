@@ -114,3 +114,12 @@ Authorization: Bearer {{access_token}}
 ###
 GET {{baseURL}}/space/getRequestedSpaces
 Authorization: Bearer {{access_token}}
+
+###
+GET {{baseURL}}/space/getSpace
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "space_id": 31
+}

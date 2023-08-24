@@ -82,4 +82,28 @@ module.exports = class Space extends Model{
             });
         return true
     }
+
+    static async getActiveSpaces(user_id){
+        return this.sequelize.query(
+            `SELECT s.*, COUNT(b.booking_id) AS request_count 
+            FROM space s 
+            LEFT JOIN booking b ON b.space_id = s.space_id AND b.status = 'requested'
+            WHERE s.status = 'active'
+            AND s.user_id = :user_id
+            GROUP BY s.space_id`,
+            { replacements: { user_id: user_id }, type: this.sequelize.QueryTypes.SELECT }
+        );
+    }
+
+    static async getDisabledSpaces(user_id){
+        return this.findAll({
+            where: { user_id: user_id, status: "disabled" },
+        });
+    }
+
+    static async getRequestedSpaces(user_id){
+        return this.findAll({
+            where: { user_id: user_id, status: "requested" },
+        });
+    }
 }  

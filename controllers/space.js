@@ -83,9 +83,7 @@ module.exports = class SpaceController {
 
     static async getActiveSpaces(req, res) {
         try {
-            const spaces = await Space.findAll({
-                where: { user_id: req.user.user_id, status: "active" },
-            });
+            const spaces = await Space.getActiveSpaces(req.user.user_id);
             res.json({ status: "success", spaces: spaces });
         } catch (err) {
             console.error(err.message)
@@ -95,9 +93,7 @@ module.exports = class SpaceController {
 
     static async getDisabledSpaces(req, res) {
         try {
-            const spaces = await Space.findAll({
-                where: { user_id: req.user.user_id, status: "disabled" },
-            });
+            const spaces = await Space.getDisabledSpaces(req.user.user_id);
             res.json({ status: "success", spaces: spaces });
         } catch (err) {
             console.error(err.message)
@@ -107,9 +103,7 @@ module.exports = class SpaceController {
 
     static async getRequestedSpaces(req, res) {
         try {
-            const spaces = await Space.findAll({
-                where: { user_id: req.user.user_id, status: "requested" },
-            });
+            const spaces = await Space.getRequestedSpaces(req.user.user_id);
             res.json({ status: "success", spaces: spaces });
         } catch (err) {
             console.error(err.message)
