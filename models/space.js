@@ -106,4 +106,18 @@ module.exports = class Space extends Model{
             where: { user_id: user_id, status: "requested" },
         });
     }
+
+    async getBookings(){
+        return this.sequelize.booking.findAll({
+            where: { space_id: this.space_id },
+        });
+    }
+
+    static async checkOwnership(user_id, space_id){
+        const space = await this.findOne({ where: { space_id: space_id } })
+        if (space == null){
+            return false
+        }
+        return space.user_id == user_id
+    }
 }  

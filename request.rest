@@ -123,3 +123,11 @@ Content-Type: application/json
 {
     "space_id": 31
 }
+
+###
+GET {{baseURL}}/booking/all
+Authorization: Bearer {{access_token}}
+
+###
+GET {{baseURL}}/booking/11/active
+Authorization: Bearer {{access_token}}
