@@ -121,7 +121,7 @@ Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-    "space_id": 31
+    "space_id": 39
 }
 
 ###

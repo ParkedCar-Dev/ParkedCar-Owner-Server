@@ -33,10 +33,10 @@ module.exports = class BookingController {
             } else {
                 return res.json({ status: "error", message: "Invalid status.", bookings: null });
             }
-            res.json({ status: "success", bookings: bookings });
+            res.json({ status: "success", message: "get bookings successful", bookings: bookings });
         } catch (err) {
             console.error(err.message)
-            res.json({ status: "error", bookings: null })
+            res.json({ status: "error", message: "Something went wrong", bookings: null })
         }
     }
 }
