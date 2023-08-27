@@ -14,22 +14,22 @@ module.exports = class BookingController {
 
     static async getSpaceBookings(req, res) {
         try {
-            if(Space.checkOwnership(req.user.user_id, req.params.space_id) == false){
+            if(Space.checkOwnership(req.user.user_id, req.body.space_id) == false){
                 return res.json({ status: "error", message: "You do not own this space.", bookings: null });
             }
             let bookings;
-            if(req.params.status == "active"){
-                bookings = await Booking.getActiveBookings(req.params.space_id);
-            } else if(req.params.status == "requested"){
-                bookings = await Booking.getRequestedBookings(req.params.space_id);
-            } else if(req.params.status == "completed"){
-                bookings = await Booking.getCompletedBookings(req.params.space_id);
-            } else if(req.params.status == "cancelled"){
-                bookings = await Booking.getCancelledBookings(req.params.space_id);
-            } else if(req.params.status == "declined"){
-                bookings = await Booking.getDeclinedBookings(req.params.space_id);
-            } else if(req.params.status == "all"){
-                bookings = await Booking.getAllSpaceBookings(req.params.space_id);
+            if(req.body.status == "active"){
+                bookings = await Booking.getActiveBookings(req.body.space_id);
+            } else if(req.body.status == "requested"){
+                bookings = await Booking.getRequestedBookings(req.body.space_id);
+            } else if(req.body.status == "completed"){
+                bookings = await Booking.getCompletedBookings(req.body.space_id);
+            } else if(req.body.status == "cancelled"){
+                bookings = await Booking.getCancelledBookings(req.body.space_id);
+            } else if(req.body.status == "declined"){
+                bookings = await Booking.getDeclinedBookings(req.body.space_id);
+            } else if(req.body.status == "all"){
+                bookings = await Booking.getAllSpaceBookings(req.body.space_id);
             } else {
                 return res.json({ status: "error", message: "Invalid status.", bookings: null });
             }
