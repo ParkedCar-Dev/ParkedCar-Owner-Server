@@ -52,12 +52,23 @@ module.exports = class Booking extends Model{
     }
 
     static async getRequestedBookings(space_id){
-        return await Booking.findAll({
-            where: {
-                space_id: space_id,
-                status: "requested"
+        // return await Booking.findAll({
+        //     where: {
+        //         space_id: space_id,
+        //         status: "requested"
+        //     }
+        // })
+        return await Booking.sequelize.query(
+            "SELECT booking.*, driver.name as driver_name, driver.rating as driver_rating FROM \
+            booking \
+            INNER JOIN space ON booking.space_id = space.space_id \
+            INNER JOIN driver ON booking.driver_id = driver.user_id \
+            WHERE booking.space_id = :space_id AND booking.status = 'requested'",
+            {
+                replacements: {space_id: space_id},
+                type: Booking.sequelize.QueryTypes.SELECT
             }
-        })
+        )
     }
 
     static async getCompletedBookings(space_id){
