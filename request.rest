@@ -10,8 +10,8 @@ POST {{baseURL}}/register
 Content-Type: application/json
 
 {
-    "name": "owner1",
-    "email": "owner1",
+    "name": "owner2",
+    "email": "owner2",
     "phone": "1234567890",
     "password": "1234"
 }
@@ -114,3 +114,26 @@ Authorization: Bearer {{access_token}}
 ###
 GET {{baseURL}}/space/getRequestedSpaces
 Authorization: Bearer {{access_token}}
+
+###
+GET {{baseURL}}/space/getSpace
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "space_id": 39
+}
+
+###
+GET {{baseURL}}/booking/all
+Authorization: Bearer {{access_token}}
+
+###
+POST {{baseURL}}/booking/space_bookings
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "space_id": 39,
+    "status": "requested"
+}

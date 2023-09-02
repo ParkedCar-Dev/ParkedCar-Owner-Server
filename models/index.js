@@ -31,4 +31,5 @@ db.sequelize = sequelize;
 
 db.space_owner = require("./space_owner.js").init(sequelize, Sequelize); 
 db.space = require("./space.js").init(sequelize, Sequelize);
+db.booking = require("./booking.js").init(sequelize, Sequelize);
 module.exports = db;
