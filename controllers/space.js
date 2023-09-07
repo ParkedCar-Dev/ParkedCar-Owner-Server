@@ -1,3 +1,4 @@
+const Booking = require("../models/booking");
 const Space = require("../models/space");
 
 module.exports = class SpaceController {
@@ -83,6 +84,11 @@ module.exports = class SpaceController {
 
     static async getActiveSpaces(req, res) {
         try {
+            const space_ids = await Space.findAll({
+                where: { user_id: req.user.user_id },
+                attributes: ['space_id']
+            })
+            await Booking.updateStatus(space_ids);
             const spaces = await Space.getActiveSpaces(req.user.user_id);
             res.json({ status: "success", spaces: spaces });
         } catch (err) {
@@ -103,6 +109,7 @@ module.exports = class SpaceController {
 
     static async getRequestedSpaces(req, res) {
         try {
+            //Booking.updateStatus(req.body.space_id);
             const spaces = await Space.getRequestedSpaces(req.user.user_id);
             res.json({ status: "success", spaces: spaces });
         } catch (err) {

@@ -86,6 +86,31 @@ module.exports = class Booking extends Model{
             }
         )
     }
+
+    static async updateStatus(space_ids){
+
+        for (const space_id of space_ids){
+            await Booking.update({status: 'completed'}, {
+                where: {
+                    space_id: space_id.space_id,
+                    status: 'active',
+                    to_time: {
+                        [Op.lte]: Date.now()
+                    }
+                }
+            })
+
+            await Booking.update({status: 'declined'}, {
+                where: {
+                    space_id: space_id.space_id,
+                    status: 'requested',
+                    from_time: {
+                        [Op.lte]: Date.now()
+                    }
+                }
+            })
+        }
+    }
 }
 
 
