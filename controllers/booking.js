@@ -39,4 +39,65 @@ module.exports = class BookingController {
             res.json({ status: "error", message: "Something went wrong", bookings: null })
         }
     }
+
+    static async getBookingDetails(req, res) {
+        try {
+            const booking = await Booking.findOne({
+                where: { booking_id: req.body.booking_id },
+            });
+            if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
+                return res.json({ status: "error", message: "You are not authorized to view this booking.", booking: null });
+            }
+            res.json({ status: "success", message: "get booking successful", booking: booking });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong", booking: null })
+        }
+    }
+
+    static async declineBooking(req, res) {
+        try {
+            const booking = await Booking.findOne({
+                where: { booking_id: req.body.booking_id },
+            });
+            if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
+                return res.json({ status: "error", message: "You are not authorized to update this booking." });
+            }
+            booking.status = "declined"
+            await booking.save();
+            res.json({ status: "success", message: "Booking declined successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
+        }
+    }
+
+    static async acceptBooking(req, res) {
+        try {
+            const booking = await Booking.findOne({
+                where: { booking_id: req.body.booking_id },
+            });
+            if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
+                return res.json({ status: "error", message: "You are not authorized to update this booking." });
+            }
+            booking.status = "active"
+            await booking.save();
+            const bookings = await Booking.findAll({
+                where: {
+                    space_id: booking.space_id, status: "requested",
+                    [Op.or]: 
+                    [{ from_time: { [Op.between]: [booking.from_time, booking.to_time]}},
+                    { to_time: { [Op.between]: [booking.from_time, booking.to_time]}}]
+                }
+            })
+            for (let i = 0; i < bookings.length; i++) {
+                bookings[i].status = "declined"
+                await bookings[i].save();
+            }
+            res.json({ status: "success", message: "Booking accepted successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
+        }
+    }
 }
