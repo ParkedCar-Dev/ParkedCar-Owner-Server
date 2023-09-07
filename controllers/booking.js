@@ -18,20 +18,10 @@ module.exports = class BookingController {
                 return res.json({ status: "error", message: "You do not own this space.", bookings: null });
             }
             let bookings;
-            if(req.body.status == "active"){
-                bookings = await Booking.getActiveBookings(req.body.space_id);
-            } else if(req.body.status == "requested"){
-                bookings = await Booking.getRequestedBookings(req.body.space_id);
-            } else if(req.body.status == "completed"){
-                bookings = await Booking.getCompletedBookings(req.body.space_id);
-            } else if(req.body.status == "cancelled"){
-                bookings = await Booking.getCancelledBookings(req.body.space_id);
-            } else if(req.body.status == "declined"){
-                bookings = await Booking.getDeclinedBookings(req.body.space_id);
-            } else if(req.body.status == "all"){
+            if(req.body.status == "all"){
                 bookings = await Booking.getAllSpaceBookings(req.body.space_id);
             } else {
-                return res.json({ status: "error", message: "Invalid status.", bookings: null });
+                bookings = await Booking.getBookingByStatus(req.body.space_id, req.body.status);
             }
             res.json({ status: "success", message: "get bookings successful", bookings: bookings });
         } catch (err) {
