@@ -68,6 +68,24 @@ module.exports = class Booking extends Model{
             }
         )
     }
+
+    static async getBookingDetails(booking_id){
+        return await Booking.sequelize.query(
+            `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, booking.space_id,
+            booking.total_price as total_fare, booking.payment_id, booking.payment_status, booking.payment_medium, 
+            driver.name as driver_name, driver.rating as driver_rating, 
+            space.address as address, space.city as city, space.base_fare as base_fare,
+            booking.total_price - space.base_fare as time_fare
+            FROM booking 
+            INNER JOIN space ON booking.space_id = space.space_id 
+            INNER JOIN driver ON booking.driver_id = driver.user_id 
+            WHERE booking.booking_id = :booking_id`,
+            {
+                replacements: {booking_id: booking_id},
+                type: Booking.sequelize.QueryTypes.SELECT
+            }
+        )
+    }
 }
 
 

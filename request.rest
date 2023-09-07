@@ -137,3 +137,12 @@ Content-Type: application/json
     "space_id": 39,
     "status": "requested"
 }
+
+###
+POST {{baseURL}}/booking/details
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "booking_id": 10
+}

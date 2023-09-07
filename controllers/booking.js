@@ -32,9 +32,8 @@ module.exports = class BookingController {
 
     static async getBookingDetails(req, res) {
         try {
-            const booking = await Booking.findOne({
-                where: { booking_id: req.body.booking_id },
-            });
+            let booking = await Booking.getBookingDetails(req.body.booking_id);
+            booking = booking[0]
             if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
                 return res.json({ status: "error", message: "You are not authorized to view this booking.", booking: null });
             }
