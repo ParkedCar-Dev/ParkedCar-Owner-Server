@@ -91,6 +91,10 @@ Content-Type: application/json
 }
 
 ###
+
+
+
+###
 GET {{baseURL}}/space/getMySpaces
 Authorization: Bearer {{access_token}}
 ###
@@ -127,6 +131,11 @@ Content-Type: application/json
 ###
 GET {{baseURL}}/booking/all
 Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "status": "completed"
+}
 
 ###
 POST {{baseURL}}/booking/space_bookings

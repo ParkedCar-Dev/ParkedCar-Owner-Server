@@ -25,7 +25,7 @@ module.exports = class Booking extends Model{
         return model
     }
 
-    static async getOwnerBookings(user_id){
+    static async getOwnerBookings(user_id, status){
         return await Booking.sequelize.query(
             `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, 
             booking.total_price as total_fare, booking.payment_id, booking.payment_status, booking.payment_medium, 
@@ -35,9 +35,9 @@ module.exports = class Booking extends Model{
             FROM booking 
             INNER JOIN space ON booking.space_id = space.space_id 
             INNER JOIN driver ON booking.driver_id = driver.user_id 
-            WHERE space.user_id = :user_id`,
+            WHERE space.user_id = :user_id AND booking.status = :status`,
             {
-                replacements: {user_id: user_id},
+                replacements: {user_id: user_id, status: status},
                 type: Booking.sequelize.QueryTypes.SELECT
             }
         )

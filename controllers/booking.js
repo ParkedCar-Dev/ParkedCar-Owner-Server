@@ -4,7 +4,7 @@ const Booking = require("../models/booking");
 module.exports = class BookingController {
     static async getUserBookings(req, res) {
         try {
-            const bookings = await Booking.getOwnerBookings(req.user.user_id);
+            const bookings = await Booking.getOwnerBookings(req.user.user_id, req.body.status);
             res.json({ status: "success", bookings: bookings });
         } catch (err) {
             console.error(err.message)
