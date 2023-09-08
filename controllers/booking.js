@@ -4,6 +4,12 @@ const Booking = require("../models/booking");
 module.exports = class BookingController {
     static async getUserBookings(req, res) {
         try {
+            await Booking.sequelize.query(
+                `CALL update_booking_status(:user_id, :now)`,
+                {
+                    replacements: {user_id: req.user.user_id, now: Date.now()}
+                }
+            )
             const bookings = await Booking.getOwnerBookings(req.user.user_id, req.body.status);
             res.json({ status: "success", bookings: bookings });
         } catch (err) {
