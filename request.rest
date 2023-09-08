@@ -1,5 +1,5 @@
 @baseURL = http://localhost:8001
-#@baseURL = https://parked-car-owner-dev-api.onrender.com
+# @baseURL = https://parked-car-owner-dev-api.onrender.com
 
 ###
 GET {{baseURL}}
@@ -129,12 +129,12 @@ Content-Type: application/json
 }
 
 ###
-GET {{baseURL}}/booking/all
+POST {{baseURL}}/booking/user
 Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-    "status": "completed"
+    "status": "requested"
 }
 
 ###
