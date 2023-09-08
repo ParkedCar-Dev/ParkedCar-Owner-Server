@@ -84,11 +84,13 @@ module.exports = class SpaceController {
 
     static async getActiveSpaces(req, res) {
         try {
-            const space_ids = await Space.findAll({
-                where: { user_id: req.user.user_id },
-                attributes: ['space_id']
-            })
-            await Booking.updateStatus(space_ids);
+            await Booking.sequelize.query(
+                `CALL update_booking_status(:user_id, :now)`,
+                {
+                    replacements: {user_id: req.user.user_id, now: Date.now()}
+                }
+            )
+
             const spaces = await Space.getActiveSpaces(req.user.user_id);
             res.json({ status: "success", spaces: spaces });
         } catch (err) {
