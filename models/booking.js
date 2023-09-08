@@ -53,11 +53,11 @@ module.exports = class Booking extends Model{
 
     static async getBookingByStatus(space_id, status){
         return await Booking.sequelize.query(
-            `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, 
+            `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, booking.base_fare,
             booking.total_price as total_fare, booking.payment_id, booking.payment_status, booking.payment_medium, 
             driver.name as driver_name, driver.rating as driver_rating, 
-            space.address as address, space.city as city, space.base_fare as base_fare,
-            booking.total_price - space.base_fare as time_fare
+            space.address as address, space.city as city,
+            booking.total_price - booking.base_fare as time_fare
             FROM booking 
             INNER JOIN space ON booking.space_id = space.space_id 
             INNER JOIN driver ON booking.driver_id = driver.user_id 
@@ -71,11 +71,11 @@ module.exports = class Booking extends Model{
 
     static async getBookingDetails(booking_id){
         return await Booking.sequelize.query(
-            `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, booking.space_id,
+            `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, booking.space_id, booking.base_fare,
             booking.total_price as total_fare, booking.payment_id, booking.payment_status, booking.payment_medium, 
             driver.name as driver_name, driver.rating as driver_rating, 
-            space.address as address, space.city as city, space.base_fare as base_fare,
-            booking.total_price - space.base_fare as time_fare
+            space.address as address, space.city as city,
+            booking.total_price - booking.base_fare as time_fare
             FROM booking 
             INNER JOIN space ON booking.space_id = space.space_id 
             INNER JOIN driver ON booking.driver_id = driver.user_id 
