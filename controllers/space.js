@@ -130,6 +130,17 @@ module.exports = class SpaceController {
             if (space.user_id != req.user.user_id) {
                 return res.json({ status: "error", message: "You are not authorized to change this space status." });
             }
+            if(req.body.status == "disabled"){
+                const activeBookings = await Booking.getBookingByStatus(req.body.spaceId, "active");
+                if(activeBookings.length > 0){
+                    return res.json({ status: "error", message: "You cannot disable this space as there are active bookings." });
+                }
+                const requestedBookings = await Booking.getBookingByStatus(req.body.spaceId, "requested");
+                requestedBookings.forEach(async (booking) => {
+                    booking.status = "declined";
+                    await booking.save();
+                });
+            }
             await Space.update({
                 status: req.body.status
             }, {
