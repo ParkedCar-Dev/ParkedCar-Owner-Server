@@ -17,6 +17,7 @@ module.exports = class Booking extends Model{
             payment_medium: { type: Sequelize.STRING, allowNull: false },
             medium_transaction_id: { type: Sequelize.STRING, allowNull: false },
             base_fare: { type: Sequelize.DOUBLE, allowNull: false },
+            is_rated: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
         }, {
             sequelize,
             modelName: 'booking',
@@ -112,7 +113,7 @@ module.exports = class Booking extends Model{
             `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, booking.space_id, booking.base_fare,
             booking.total_price as total_fare, booking.payment_id, booking.payment_status, booking.payment_medium, 
             driver.name as driver_name, driver.rating as driver_rating, 
-            space.address as address, space.city as city,
+            space.address as address, space.city as city, booking.is_rated,
             booking.total_price - booking.base_fare as time_fare
             FROM booking 
             INNER JOIN space ON booking.space_id = space.space_id 

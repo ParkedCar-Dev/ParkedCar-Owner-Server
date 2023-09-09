@@ -157,10 +157,15 @@ module.exports = class BookingController {
             if(booking.status != "completed"){
                 return res.json({ status: "error", message: "Booking is not completed." });
             }
+            if(booking.is_rated == true){
+                return res.json({ status: "error", message: "Driver is already rated." });
+            }
             const driver = await Driver.findOne({ where: { user_id: booking.driver_id } });
+            booking.is_rated = true
             driver.rating = (driver.rating * driver.rating_count + req.body.rating) / (driver.no_ratings + 1)
             driver.no_ratings += 1
             await driver.save();
+            await booking.save();
             res.json({ status: "success", message: "Driver reviewed successfully." });
         } catch (err) {
             console.error(err.message)
