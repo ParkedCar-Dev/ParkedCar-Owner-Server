@@ -1,5 +1,6 @@
 const Space = require("../models/space");
 const Booking = require("../models/booking");
+const Driver = require("../models/driver");
 const Op = require('sequelize').Op
 
 module.exports = class BookingController {
@@ -139,6 +140,28 @@ module.exports = class BookingController {
             booking.payment_status = "confirmed"
             await booking.save();
             res.json({ status: "success", message: "Payment confirmed successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
+        }
+    }
+
+    static async rateDriver(req, res) {
+        try {
+            const booking = await Booking.findOne({
+                where: { booking_id: req.body.booking_id },
+            });
+            if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
+                return res.json({ status: "error", message: "You are not authorized to update this booking." });
+            }
+            if(booking.status != "completed"){
+                return res.json({ status: "error", message: "Booking is not completed." });
+            }
+            const driver = await Driver.findOne({ where: { user_id: booking.driver_id } });
+            driver.rating = (driver.rating * driver.rating_count + req.body.rating) / (driver.no_ratings + 1)
+            driver.no_ratings += 1
+            await driver.save();
+            res.json({ status: "success", message: "Driver reviewed successfully." });
         } catch (err) {
             console.error(err.message)
             res.json({ status: "error", message: "Something went wrong." })
