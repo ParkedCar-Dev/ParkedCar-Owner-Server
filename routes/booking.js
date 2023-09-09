@@ -10,5 +10,7 @@ router.post('/space_bookings', BookingController.getSpaceBookings);
 router.post('/details', BookingController.getBookingDetails);
 router.post('/decline', BookingController.declineBooking);
 router.post('/accept', BookingController.acceptBooking);
+router.post('/paymentStatus', BookingController.getPaymentStatus);
+router.post('/confirmPayment', BookingController.confirmPayment);
 
 module.exports = router;

@@ -155,3 +155,30 @@ Content-Type: application/json
 {
     "booking_id": 10
 }
+
+###
+POST {{baseURL}}/booking/accept
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "booking_id": 30
+}
+
+###
+POST {{baseURL}}/booking/paymentStatus
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "booking_id": 30
+}
+
+###
+POST {{baseURL}}/booking/confirmPayment
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "booking_id": 30
+}

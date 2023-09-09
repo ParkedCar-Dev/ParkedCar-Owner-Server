@@ -99,4 +99,39 @@ module.exports = class BookingController {
             res.json({ status: "error", message: "Something went wrong." })
         }
     }
+
+    static async getPaymentStatus(req, res) {
+        try {
+            const booking = await Booking.findOne({
+                where: { booking_id: req.body.booking_id },
+            });
+            if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
+                return res.json({ status: "error", message: "You are not authorized to update this booking.", payment_status: null});
+            }
+            res.json({ status: "success", message: "Payment status fetched successfully.", payment_status: booking.payment_status });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong.", payment_status: null})
+        }
+    }
+
+    static async confirmPayment(req, res) {
+        try {
+            const booking = await Booking.findOne({
+                where: { booking_id: req.body.booking_id },
+            });
+            if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
+                return res.json({ status: "error", message: "You are not authorized to update this booking." });
+            }
+            if(booking.payment_status != "paid"){
+                return res.json({ status: "error", message: "Payment is not done." });
+            }
+            booking.payment_status = "confirmed"
+            await booking.save();
+            res.json({ status: "success", message: "Payment confirmed successfully." });
+        } catch (err) {
+            console.error(err.message)
+            res.json({ status: "error", message: "Something went wrong." })
+        }
+    }
 }
