@@ -162,7 +162,7 @@ module.exports = class BookingController {
             }
             const driver = await Driver.findOne({ where: { user_id: booking.driver_id } });
             booking.is_rated = true
-            driver.rating = (driver.rating * driver.rating_count + req.body.rating) / (driver.no_ratings + 1)
+            driver.rating = (driver.rating * driver.no_ratings + req.body.rating) / (driver.no_ratings + 1)
             driver.no_ratings += 1
             await driver.save();
             await booking.save();
