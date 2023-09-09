@@ -1,5 +1,6 @@
 const Space = require("../models/space");
 const Booking = require("../models/booking");
+const Op = require('sequelize').Op
 
 module.exports = class BookingController {
     static async getUserBookings(req, res) {
