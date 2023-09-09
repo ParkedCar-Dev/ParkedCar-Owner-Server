@@ -75,6 +75,9 @@ module.exports = class BookingController {
             if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
                 return res.json({ status: "error", message: "You are not authorized to update this booking." });
             }
+            if(booking.status != "requested"){
+                return res.json({ status: "error", message: "Booking is not in requested state." });
+            }
             booking.status = "active"
             await booking.save();
             const bookings = await Booking.findAll({
