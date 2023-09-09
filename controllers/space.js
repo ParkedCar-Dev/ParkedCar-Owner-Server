@@ -72,9 +72,8 @@ module.exports = class SpaceController {
             if (space.user_id != req.user.user_id) {
                 return res.json({ status: "error", message: "You are not authorized to delete this space." });
             }
-            await Space.destroy({
-                where: { space_id: req.body.spaceId },
-            });
+            space.status = "deleted";
+            await space.save();
             res.json({ status: "success", message: "Space deleted successfully." });
         } catch (err) {
             console.error(err.message)
