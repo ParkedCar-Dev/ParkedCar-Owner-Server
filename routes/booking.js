@@ -12,6 +12,6 @@ router.post('/decline', BookingController.declineBooking);
 router.post('/accept', BookingController.acceptBooking);
 router.post('/paymentStatus', BookingController.getPaymentStatus);
 router.post('/confirmPayment', BookingController.confirmPayment);
-router.post('rateDriver', BookingController.rateDriver);
+router.post('/rateDriver', BookingController.rateDriver);
 
 module.exports = router;
