@@ -87,7 +87,7 @@ module.exports = class SpaceController {
             await Booking.sequelize.query(
                 `CALL update_booking_status(:user_id, :now)`,
                 {
-                    replacements: {user_id: req.user.user_id, now: Date.now()}
+                    replacements: {user_id: req.user.user_id, now: Date.now() + 600000}
                 }
             )
 
