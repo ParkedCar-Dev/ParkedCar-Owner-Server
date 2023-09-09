@@ -11,7 +11,13 @@ module.exports = class BookingController {
                     replacements: {user_id: req.user.user_id, now: Date.now()}
                 }
             )
-            const bookings = await Booking.getOwnerBookings(req.user.user_id, req.body.status);
+            let bookings;
+            if(req.body.status == "past"){
+                bookings = await Booking.getPastUserBookings(req.user.user_id);
+            }
+            else{ 
+                bookings = await Booking.getOwnerBookings(req.user.user_id, req.body.status);
+            }
             res.json({ status: "success", bookings: bookings });
         } catch (err) {
             console.error(err.message)
@@ -27,7 +33,11 @@ module.exports = class BookingController {
             let bookings;
             if(req.body.status == "all"){
                 bookings = await Booking.getAllSpaceBookings(req.body.space_id);
-            } else {
+            } 
+            else if(req.body.status == "past"){
+                bookings = await Booking.getSpacePastBookings(req.body.space_id);
+            }
+            else {
                 bookings = await Booking.getBookingByStatus(req.body.space_id, req.body.status);
             }
             res.json({ status: "success", message: "get bookings successful", bookings: bookings });

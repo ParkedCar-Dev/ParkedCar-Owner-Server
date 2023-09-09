@@ -43,6 +43,25 @@ module.exports = class Booking extends Model{
         )
     }
 
+    static async getPastUserBookings(user_id){
+        return await Booking.sequelize.query(
+            `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, booking.base_fare,
+            booking.total_price as total_fare, booking.payment_id, booking.payment_status, booking.payment_medium, 
+            driver.name as driver_name, driver.rating as driver_rating, 
+            space.address as address, space.city as city,
+            booking.total_price - booking.base_fare as time_fare
+            FROM booking 
+            INNER JOIN space ON booking.space_id = space.space_id 
+            INNER JOIN driver ON booking.driver_id = driver.user_id 
+            WHERE space.user_id = :user_id AND (booking.status = 'completed' 
+            OR booking.status = 'cancelled' OR booking.status = 'declined')`,
+            {
+                replacements: {user_id: user_id},
+                type: Booking.sequelize.QueryTypes.SELECT
+            }
+        )
+    }
+
     static async getAllSpaceBookings(space_id){
         return await Booking.findAll({
             where: {
@@ -64,6 +83,25 @@ module.exports = class Booking extends Model{
             WHERE booking.space_id = :space_id AND booking.status = :status`,
             {
                 replacements: {space_id: space_id, status: status},
+                type: Booking.sequelize.QueryTypes.SELECT
+            }
+        )
+    }
+
+    static async getPastSpaceBookigs(space_id){
+        return await Booking.sequelize.query(
+            `SELECT booking.booking_id, booking.from_time, booking.to_time, booking.status, booking.base_fare,
+            booking.total_price as total_fare, booking.payment_id, booking.payment_status, booking.payment_medium, 
+            driver.name as driver_name, driver.rating as driver_rating, 
+            space.address as address, space.city as city,
+            booking.total_price - booking.base_fare as time_fare
+            FROM booking 
+            INNER JOIN space ON booking.space_id = space.space_id 
+            INNER JOIN driver ON booking.driver_id = driver.user_id 
+            WHERE booking.space_id = :space_id AND (booking.status = 'completed' 
+            OR booking.status = 'cancelled' OR booking.status = 'declined')`,
+            {
+                replacements: {space_id: space_id},
                 type: Booking.sequelize.QueryTypes.SELECT
             }
         )

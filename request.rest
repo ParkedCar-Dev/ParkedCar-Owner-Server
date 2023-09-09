@@ -129,12 +129,12 @@ Content-Type: application/json
 }
 
 ###
-GET {{baseURL}}/booking/user
+POST {{baseURL}}/booking/user
 Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-    "status": "requested"
+    "status": "past"
 }
 
 ###
