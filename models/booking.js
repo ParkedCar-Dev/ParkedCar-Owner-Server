@@ -16,7 +16,7 @@ module.exports = class Booking extends Model{
             payment_status: { type: Sequelize.STRING, allowNull: false },
             payment_medium: { type: Sequelize.STRING, allowNull: false },
             medium_transaction_id: { type: Sequelize.STRING, allowNull: false },
-            base_price: { type: Sequelize.DOUBLE, allowNull: false },
+            base_fare: { type: Sequelize.DOUBLE, allowNull: false },
         }, {
             sequelize,
             modelName: 'booking',
