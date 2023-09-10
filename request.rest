@@ -91,6 +91,10 @@ Content-Type: application/json
 }
 
 ###
+
+
+
+###
 GET {{baseURL}}/space/getMySpaces
 Authorization: Bearer {{access_token}}
 ###
@@ -125,8 +129,13 @@ Content-Type: application/json
 }
 
 ###
-GET {{baseURL}}/booking/all
+POST {{baseURL}}/booking/user
 Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "status": "past"
+}
 
 ###
 POST {{baseURL}}/booking/space_bookings
@@ -136,4 +145,40 @@ Content-Type: application/json
 {
     "space_id": 39,
     "status": "requested"
+}
+
+###
+POST {{baseURL}}/booking/details
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "booking_id": 10
+}
+
+###
+POST {{baseURL}}/booking/accept
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "booking_id": 30
+}
+
+###
+POST {{baseURL}}/booking/paymentStatus
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "booking_id": 30
+}
+
+###
+POST {{baseURL}}/booking/confirmPayment
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "booking_id": 30
 }

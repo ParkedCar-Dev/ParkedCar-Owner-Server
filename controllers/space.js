@@ -1,3 +1,4 @@
+const Booking = require("../models/booking");
 const Space = require("../models/space");
 
 module.exports = class SpaceController {
@@ -71,9 +72,8 @@ module.exports = class SpaceController {
             if (space.user_id != req.user.user_id) {
                 return res.json({ status: "error", message: "You are not authorized to delete this space." });
             }
-            await Space.destroy({
-                where: { space_id: req.body.spaceId },
-            });
+            space.status = "deleted";
+            await space.save();
             res.json({ status: "success", message: "Space deleted successfully." });
         } catch (err) {
             console.error(err.message)
@@ -83,6 +83,13 @@ module.exports = class SpaceController {
 
     static async getActiveSpaces(req, res) {
         try {
+            await Booking.sequelize.query(
+                `CALL update_booking_status(:user_id, :now)`,
+                {
+                    replacements: {user_id: req.user.user_id, now: Date.now()}
+                }
+            )
+
             const spaces = await Space.getActiveSpaces(req.user.user_id);
             res.json({ status: "success", spaces: spaces });
         } catch (err) {
@@ -103,6 +110,7 @@ module.exports = class SpaceController {
 
     static async getRequestedSpaces(req, res) {
         try {
+            //Booking.updateStatus(req.body.space_id);
             const spaces = await Space.getRequestedSpaces(req.user.user_id);
             res.json({ status: "success", spaces: spaces });
         } catch (err) {
@@ -121,6 +129,17 @@ module.exports = class SpaceController {
             }
             if (space.user_id != req.user.user_id) {
                 return res.json({ status: "error", message: "You are not authorized to change this space status." });
+            }
+            if(req.body.status == "disabled"){
+                const activeBookings = await Booking.getBookingByStatus(req.body.spaceId, "active");
+                if(activeBookings.length > 0){
+                    return res.json({ status: "error", message: "You cannot disable this space as there are active bookings." });
+                }
+                const requestedBookings = await Booking.getBookingByStatus(req.body.spaceId, "requested");
+                requestedBookings.forEach(async (booking) => {
+                    booking.status = "declined";
+                    await booking.save();
+                });
             }
             await Space.update({
                 status: req.body.status

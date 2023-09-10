@@ -11,7 +11,7 @@ module.exports = class Space extends Model{
             base_fare: { type: Sequelize.DOUBLE, allowNull: false },
             user_id: { type: Sequelize.INTEGER, allowNull: false },
             security_measures: { type: Sequelize.STRING, allowNull: false },
-            status: { type: Sequelize.STRING, allowNull: false },
+            status: { type: Sequelize.STRING, allowNull: false, defaultValue: "disabled" },
             rating: { type: Sequelize.DOUBLE, allowNull: false, defaultValue: 0 },
             total_books: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
             auto_approve: { type: Sequelize.BOOLEAN, allowNull: false },
@@ -22,7 +22,8 @@ module.exports = class Space extends Model{
             created_at: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW },
             updated_at: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW },
             availability_mask: { type: Sequelize.STRING, allowNull: false },
-            time_slots: { type: Sequelize.ARRAY(Sequelize.BOOLEAN), allowNull: false }
+            time_slots: { type: Sequelize.ARRAY(Sequelize.BOOLEAN), allowNull: false },
+            no_ratings: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
             }, {
                 sequelize,
                 modelName: 'space',
@@ -52,7 +53,7 @@ module.exports = class Space extends Model{
             
             return this.build({
                 width: width, length: length, height: height, base_fare: base_fare, user_id: user_id,
-                security_measures: security_measures, status: status, auto_approve: auto_approve, address: address,
+                security_measures: security_measures, auto_approve: auto_approve, address: address,
                 city: city, latitude: latitude, longitude: longitude, availability_mask: availability_mask, time_slots: time_slots,
             });
         }catch(err){
