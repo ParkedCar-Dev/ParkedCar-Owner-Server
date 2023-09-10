@@ -55,6 +55,16 @@ module.exports = class BookingController {
             if(await Space.checkOwnership(req.user.user_id, booking.space_id) == false){
                 return res.json({ status: "error", message: "You are not authorized to view this booking.", booking: null });
             }
+            if(booking.to_time < Date.now()){
+                if(booking.status == 'requested'){
+                    booking.status = 'declined'
+                    await Booking.sequelize.query(`UPDATE booking SET status = 'declined' WHERE booking_id = ${req.body.booking_id}`)
+                }
+                else if(booking.status == 'active'){
+                    booking.status = 'completed'
+                    await Booking.sequelize.query(`UPDATE booking SET status = 'completed' WHERE booking_id = ${req.body.booking_id}`)
+                }
+            }
             res.json({ status: "success", message: "get booking successful", booking: booking });
         } catch (err) {
             console.error(err.message)
