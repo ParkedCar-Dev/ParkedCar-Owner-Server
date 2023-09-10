@@ -62,7 +62,7 @@ module.exports = class Booking extends Model{
             }
         )
     }
-
+  
     static async getAllSpaceBookings(space_id){
         return await Booking.findAll({
             where: {
